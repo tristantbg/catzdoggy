@@ -48,15 +48,15 @@
 	<?php endif ?>
 
 	<meta itemprop="description" content="<?= $site->description()->html() ?>">
-	<!-- <link rel="shortcut icon" href="<?= //url('assets/images/favicon.ico') ?>">
-	<link rel="icon" href="<?= //url('assets/images/favicon.ico') ?>" type="image/x-icon"> -->
+	<!-- <link rel="shortcut icon" href="<?php //url('assets/images/favicon.ico') ?>">
+	<link rel="icon" href="<?php //url('assets/images/favicon.ico') ?>" type="image/x-icon"> -->
 
 	<?php 
 	echo css('assets/css/build/build.min.css');
 	echo js('assets/js/vendor/modernizr.min.js');
 	?>
 	
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	<script>window.jQuery || document.write('<script src="<?= url('assets/js/vendor/jquery.min.js') ?>">\x3C/script>')</script>
 
 	<?php if(!$site->customcss()->empty()): ?>
