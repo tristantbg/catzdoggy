@@ -2,23 +2,38 @@
 @import '../../node_modules/jeet/stylus/jeet/*'
 @import '_mixins.styl'
 
+//Fonts
+webfont('VE', 'VE', true, 'normal')
+
 // Media queries
-$desktop = 1600px
-$laptop = 1100px
-$tablet = 768px
-$mobile = 400px
+$xl = 1439px
+$lg = 1260px
+$md = 1023px
+$sm = 767px
 
 // Colors
 $primary ?= #fff
 $secondary ?= #000
+$accent ?= #ff0000
 
 // Metrics
 $padding = 10px
 
 // CSS Reset
 global-reset()
+//@import '_helpers.styl'
 
-webfont('Franklin Gothic', 'franklingothic', true, 'bold')
+::selection
+	//background $accent
+	//color $primary
+	
+::-moz-selection
+	//background $accent
+	//color $primary
+
+*
+	box-sizing()
+	//hideselect()
 
 body,html
 	width 100%
@@ -26,27 +41,25 @@ body,html
 	background-color $primary
 	-webkit-text-size-adjust 100%
 
+html
+	font-size 62.5%
+
 body
 	text-rendering optimizeLegibility
 	font-smoothing()
-	font-size 62.5%
+	font-family 'Helvetica'
+	font-size 2rem
 
 p
 	margin-bottom 1em
-
-::selection
-	background $secondary
-	
-::-moz-selection
-	background $secondary
-
-*
-	hideselect()
 
 a, a:hover, a:visited, a:focus
 	color inherit
 	text-decoration none
 	cursor pointer
+
+a:hover, a.active
+	color $accent
 
 .loader
 	position fixed
@@ -57,3 +70,57 @@ a, a:hover, a:visited, a:focus
 	background $primary url('../../images/loader.gif') center no-repeat
 	background-size 15px
 	z-index 10000
+
+header
+	span(1)
+	position absolute
+	top 0	
+	left 0
+	font-family 'VE'
+	font-size 12.25vw
+	line-height .85em
+	text-align center
+	text-transform uppercase
+	z-index 200
+	background $primary
+	nav#menu
+		span(1)
+		ul
+			width 100%
+			li
+				display none
+				position relative
+				max-height .8em
+			li#site-title
+				display block
+				margin-top 0.08em
+			li
+				background $primary
+				margin-top 0.08em
+			li::after
+				content ''
+				position absolute
+				width 100%
+				height 2px
+				bottom 0
+				left 0
+				background $secondary
+				pointer-events none
+	nav#menu:hover
+		li
+			display block
+	nav#menu:hover ~ #ticker
+		display none
+	#ticker
+		span(1)
+		font-size initial
+		line-height 1
+		padding .5em 0 .3em
+		border-bottom 2px solid $secondary
+
+header.fixed
+	position fixed
+
+#container
+	span(1)
+	margin-top 13vw

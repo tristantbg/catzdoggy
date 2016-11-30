@@ -69,3 +69,24 @@
 <body>
 
 <div class="loader"></div>
+
+<header class="fixed">
+	<?php $items = $pages->visible(); ?>
+	<?php if($items->count()): ?>
+	<nav id="menu">
+		<ul>
+			<li id="site-title">
+				<a href="<?= $site->url() ?>" data-target="index"><?= $site->title()->html() ?></a>
+			</li>
+			<?php foreach($items as $item): ?>
+				<li><a href="<?php echo $item->url() ?>" data-title="<?= $item->title()->html() ?>" data-target="page"><?php echo $item->title()->html() ?></a></li>
+			<?php endforeach ?>
+		</ul>
+	</nav>
+	<?php endif ?>
+	<div id="ticker">
+		<span>fdhjskjfsd fjskld jfksdl fj lkfjl sd</span>
+	</div>
+</header>
+
+<div id="container">
