@@ -3,6 +3,7 @@
 @import '_mixins.styl'
 
 //Fonts
+webfont('V', 'V', true, 'normal')
 webfont('VE', 'VE', true, 'normal')
 
 // Media queries
@@ -47,11 +48,56 @@ html
 body
 	text-rendering optimizeLegibility
 	font-smoothing()
-	font-family 'Helvetica'
+	font-family 'V', 'Helvetica', 'Arial', sans-serif
 	font-size 2rem
+
+.row
+	span(1)
+
+img
+	width auto
+	height auto
+	max-height 100%
+	max-width 100%
+
+img.lazyimg
+	transition(opacity, 200ms)
+	opacity 0
+
+img.lazyimg.lazyloaded, img.lazyimg.flickity-lazyloaded
+	opacity 1
+
+////////////////////////////////////////////////////// TEXTS
 
 p
 	margin-bottom 1em
+
+p:last-child
+	margin-bottom 0
+
+.fat
+	span(1)
+	position relative
+	font-family 'VE'
+	font-size 12.25vw
+	line-height .88em
+	text-transform uppercase
+	margin-top .1em
+	text-align center
+	span
+		display inline
+.fat.border::after
+	content ''
+	position absolute
+	width 100%
+	height 2px
+	bottom .02em
+	left 0
+	background $secondary
+	pointer-events none
+
+.fat.border:last-of-type::after
+	display none
 
 a, a:hover, a:visited, a:focus
 	color inherit
@@ -61,15 +107,44 @@ a, a:hover, a:visited, a:focus
 a:hover, a.active
 	color $accent
 
+////////////////////////////////////////////////////// HEADER
+
 .loader
 	position fixed
 	width 100%
 	height 100%
 	top 0
 	left 0
-	background $primary url('../../images/loader.gif') center no-repeat
+	background $primary //url('../../images/loader.gif') center no-repeat
 	background-size 15px
-	z-index 10000
+	z-index 195
+
+@keyframes flash {
+  from {
+    color: $accent
+  }
+  to {
+    color: $secondary
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0
+  }
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes hideTitle {
+  from {
+    transform(none)
+  }
+  to {
+    transform(translate3d(0,-10.8vw,0))
+  }
+}
 
 header
 	span(1)
@@ -85,6 +160,7 @@ header
 	background $primary
 	nav#menu
 		span(1)
+		overflow hidden
 		ul
 			width 100%
 			li
@@ -109,18 +185,246 @@ header
 	nav#menu:hover
 		li
 			display block
-	nav#menu:hover ~ #ticker
+	nav#menu:hover ~ #page-title, nav#menu:hover ~ #ticker
 		display none
+	#page-title
+		span(1)
+		width 100vw
+		font-size 10vw
+		line-height 0
+		//margin -.2em 0 -.35em
+		span
+			display inline
+			line-height 1
 	#ticker
 		span(1)
-		font-size initial
+		font-size 2rem
+		font-family 'V'
 		line-height 1
-		padding .5em 0 .3em
+		padding .5em 0 .2em
+		border-top 2px solid $secondary
 		border-bottom 2px solid $secondary
+		overflow hidden
+		text-align left
+		#ticker-inner
+			display inline-block
+			white-space nowrap
+			transform(translate3d(0,0,0))
+		.banner_text
+			display inline-block
+			margin-right .5em
+		.banner_text.flash
+			color $accent
+			vendor(animation-name, flash)
+			vendor(animation-duration, 1s)
+			vendor(animation-fill-mode, forwards)
 
 header.fixed
 	position fixed
 
+header.hide
+	pointer-events none
+	nav#menu
+		ul
+			li
+				display none
+				pointer-events none
+			li#site-title
+				display block
+
+////////////////////////////////////////////////////// GENERAL
+
 #container
 	span(1)
+	//transition(opacity, 150ms)
+	opacity 1
 	margin-top 13vw
+
+#image-hover
+	display none
+	position absolute
+	top 0
+	left 0
+	width 300px
+	transition(margin-left, 170ms)
+	margin-left 0px
+	pointer-events none
+	border 2px solid $secondary
+	+below($md)
+		display none
+		visibility hidden
+
+////////////////////////////////////////////////////// GRID
+
+#container
+	.content-grid
+		margin-top -2px
+		overflow hidden
+		span(1)
+		flexbox()
+		flex-wrap wrap
+		align-items strech
+		a
+			display block
+		img
+			display block
+			width 100%
+			height auto
+			border-bottom 2px solid $secondary
+			+below($md)
+				border none
+		.column
+			span(1/4)
+			border-style inset
+			border-color $secondary
+			border-width 0px 2px 0px 2px
+			position relative
+		.column::before
+			content ''
+			position absolute
+			width 800%
+			height 2px
+			top 0
+			left 0
+			background $secondary
+		for num in 1..8
+			.col{num}
+				span(num/8)
+			.off0
+				border-right none
+		for num in -8..-1
+			.off{num}
+				margin-left (-1 * num * 12.5%)
+		for num in 1..8
+			.off{num}
+				margin-right (num * 12.5%)
+		.column
+			+below($md)
+				stack()
+				border-width 0px 0px 2px 0px
+		.column::before
+			+below($md)
+				display none
+	.categories-grid
+		overflow hidden
+		span(1)
+		height 100%
+		flexbox()
+		align-items center
+		justify-content center
+
+#categories
+	span(1)
+	position fixed
+	bottom 0
+	left 0
+	z-index 190
+	background $primary
+	line-height 1
+	padding .5em 0 .2em
+	border-top 2px solid $secondary
+	border-bottom 2px solid $secondary
+	overflow hidden
+	text-align center
+	text-transform uppercase
+	flex-direction row
+	align-items center
+	justify-content center
+	.category
+		margin 0 .5em
+
+////////////////////////////////////////////////////// OVERRIDES
+
+body.hover-left
+	#image-hover
+		margin-left -300px
+
+body.home
+	header
+		#page-title
+			display none
+		#ticker
+			border-top none
+
+body.artist
+	header
+		vendor(animation-name, hideTitle)
+		vendor(animation-duration, 600ms)
+		vendor(animation-delay, 300ms)
+		vendor(animation-fill-mode, forwards)
+		nav#menu
+			//display none
+	header:hover
+		vendor(animation, none)
+		#page-title, #ticker
+			display none
+		nav#menu, nav#menu li
+			display block
+
+body.page
+	header
+		#page-title
+			display none
+		#ticker
+			border-top none
+	#container
+		text-align center
+		margin-top calc(11.2vw + 3rem)
+
+body[data-id="artists"]
+	overflow-x hidden
+	header
+		#ticker
+			opacity 0
+			position absolute
+	#artists-menu
+		span(1)
+		position fixed
+		z-index 190
+		background $primary
+		font-size 2rem
+		font-family 'V'
+		line-height 1
+		padding .5em 0 .2em
+		border-bottom 2px solid $secondary
+		overflow hidden
+		text-align center
+		text-transform uppercase
+		.artist-link
+			display inline-block
+			margin-right .5em
+
+body.leaving
+	#container, footer
+		opacity 0
+
+////////////////////////////////////////////////////// FOOTER
+
+footer
+	display none
+	span(1)
+	transition(opacity, 150ms)
+	opacity 1
+	position fixed
+	bottom 0
+	left 0
+	z-index 190
+	background $primary
+	line-height 1
+	padding .5em 0 .2em
+	border-top 2px solid $secondary
+	border-bottom 2px solid $secondary
+	overflow hidden
+	text-align center
+	text-transform uppercase
+	flex-direction row
+	align-items center
+	justify-content center
+	p
+		margin 0 .5em
+
+body.footer
+	#container
+		margin-bottom 3rem
+	footer
+		flexbox()

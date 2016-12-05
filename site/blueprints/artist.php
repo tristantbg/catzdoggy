@@ -3,9 +3,12 @@
 title: Artist
 pages:
   template:
-    - project
+    - category
 files: true
 fields:
+  titleSettings:
+    label: Artist Settings
+    type: headline
   title:
     label: Name
     type:  text
@@ -13,7 +16,7 @@ fields:
   featuredimage:
     label: Featured image
     type: image
-    required: true
+    help: Required to display Artist
     width: 1/2
   template:
     label: Template
@@ -28,18 +31,15 @@ fields:
   soloproject:
     label: Selected project
     type: quickselect
-    options: children
-    text: '{{title}}'
+    options: grandchildren
+    sort: asc
+    text: '{{title}} ({{uri}})'
     placeholder: Choose a project...
     help: Only for "One project" template
     width: 1/2
   text:
     label: Description for SEO
     type:  textarea
-  categories:
-    label: Categories
-    type: tags
-    width: 1/2
   clients:
     label: Clients
     type: list

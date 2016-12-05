@@ -2,21 +2,21 @@ module.exports = function(grunt) {
     grunt.initConfig({
         concat: {
             plugins: {
-                src: ['assets/oembed/oembed.min.js','lib/history.js/scripts/bundled/html4+html5/jquery.history.js'],
-                dest: 'assets/js/plugins.concat.js'
+                src: ['lib/flickity/dist/flickity.pkgd.min.js', 'lib/lazysizes/lazysizes.min.js', 'lib/lazysizes/plugins/optimumx/ls.optimumx.min.js', 'lib/bigtext/dist/bigtext.js','scrollForeverCustom.js','lib/history.js/scripts/bundled/html4+html5/jquery.history.js'],
+                dest: 'assets/js/concat/plugins.concat.js'
             },
             js: {
                 src: ['assets/js/app.js'],
-                dest: 'assets/js/app.concat.js'
+                dest: 'assets/js/concat/app.concat.js'
             },
         },
         uglify: {
             plugins: {
-                src: 'assets/js/plugins.concat.js',
+                src: 'assets/js/concat/plugins.concat.js',
                 dest: 'assets/js/build/plugins.js'
             },
             build: {
-                src: 'assets/js/app.concat.js',
+                src: 'assets/js/concat/app.concat.js',
                 dest: 'assets/js/build/app.min.js',
                 options: {
                     sourceMap: true
@@ -42,13 +42,13 @@ module.exports = function(grunt) {
           },
           target: {
             files: {
-              'assets/css/build/build.min.css': ['lib/normalize-css/normalize.css', 'assets/oembed/oembed.css', 'assets/css/app.min.css']
+              'assets/css/build/build.min.css': ['lib/normalize-css/normalize.css', 'lib/flickity/css/flickity.css', 'assets/css/app.min.css']
             }
           }
         },
         watch: {
             js: {
-                files: ['lib/**/*.js', 'assets/js/**/!(app.min|app.concat).js'],
+                files: ['scrollForeverCustom.js','lib/**/*.js', 'assets/js/app.js'],
                 tasks: ['javascript'],
                 options: {
                     livereload: true,

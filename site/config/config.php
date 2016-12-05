@@ -30,6 +30,15 @@ of the system, please check out http://getkirby.com/docs/advanced/options
 */
 
 c::set('debug', true);
+c::set('typography', true);
+c::set('typography.ordinal.suffix', false);
+c::set('typography.fractions', false);
+c::set('typography.dashes.spacing', false);
+c::set('typography.hyphenation', true);
+c::set('typography.hyphenation.minlength', 5);
+c::set('typography.hyphenation.headings', false);
+c::set('typography.hyphenation.allcaps', false);
+c::set('typography.hyphenation.titlecase', false);
 c::set('oembed.lazyvideo', true);
 c::set('sitemap.exclude', array('error'));
 c::set('sitemap.important', array('contact'));

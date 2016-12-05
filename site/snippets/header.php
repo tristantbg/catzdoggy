@@ -66,7 +66,9 @@
 	<?php endif ?>
 
 </head>
-<body>
+
+<?php $pname = $page->content()->name(); ?>
+<body class="<?php if($page->isHomepage()) { echo 'home footer'; } elseif($pname == 'artist'){ echo ' artist'; } elseif($pname == 'artists') { echo ' page'; } elseif($pname == 'default') { echo ' page footer'; } ?>" data-id="<?= tagslug($page->title()) ?>">
 
 <div class="loader"></div>
 
@@ -79,13 +81,16 @@
 				<a href="<?= $site->url() ?>" data-target="index"><?= $site->title()->html() ?></a>
 			</li>
 			<?php foreach($items as $item): ?>
-				<li><a href="<?php echo $item->url() ?>" data-title="<?= $item->title()->html() ?>" data-target="page"><?php echo $item->title()->html() ?></a></li>
+				<li><a href="<?php echo $item->url() ?>" data-title="<?= $item->title()->html() ?>" data-id="<?= tagslug($item->title()) ?>" data-target="page"><?php echo $item->title()->html() ?></a></li>
 			<?php endforeach ?>
 		</ul>
 	</nav>
 	<?php endif ?>
-	<div id="ticker">
-		<span>fdhjskjfsd fjskld jfksdl fj lkfjl sd</span>
+	<div id="page-title">
+		<span><?= $page->title()->html() ?></span>
+	</div>
+	<div id="ticker" data-tick="<?php e($pname == 'artist', $site->title()->html(), $page->title()->html()) ?>">
+		<div id="ticker-inner"></div>
 	</div>
 </header>
 
