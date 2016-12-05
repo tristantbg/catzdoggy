@@ -137,15 +137,6 @@ a:hover, a.active
   }
 }
 
-@keyframes hideTitle {
-  from {
-    transform(none)
-  }
-  to {
-    transform(translate3d(0,-10.8vw,0))
-  }
-}
-
 header
 	span(1)
 	position absolute
@@ -348,14 +339,9 @@ body.home
 
 body.artist
 	header
-		vendor(animation-name, hideTitle)
-		vendor(animation-duration, 600ms)
-		vendor(animation-delay, 300ms)
-		vendor(animation-fill-mode, forwards)
 		nav#menu
-			//display none
+			display none
 	header:hover
-		vendor(animation, none)
 		#page-title, #ticker
 			display none
 		nav#menu, nav#menu li
@@ -370,6 +356,10 @@ body.page
 	#container
 		text-align center
 		margin-top calc(11.2vw + 3rem)
+
+body.artist
+	.loader
+		z-index 500
 
 body[data-id="artists"]
 	overflow-x hidden
