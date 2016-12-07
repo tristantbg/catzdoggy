@@ -115,15 +115,16 @@ a:hover, a.active
 
 ////////////////////////////////////////////////////// HEADER
 
-.loader
+#loader
 	position fixed
+	transition(all, 180ms)
 	width 100%
 	height 100%
 	top 0
 	left 0
 	background $primary //url('../../images/loader.gif') center no-repeat
 	background-size 15px
-	z-index 195
+	z-index 1000
 
 @keyframes flash {
   from {
@@ -533,10 +534,6 @@ body.page
 		text-align center
 		margin-top calc(11.2vw + 3rem)
 
-body.artist
-	.loader
-		z-index 500
-
 body[data-id="artists"]
 	overflow-x hidden
 	header
@@ -553,9 +550,17 @@ body[data-id="artists"]
 			display inline-block
 			margin-right .5em
 
-body.leaving
-	#container, footer
+body.page-loaded
+	#loader
 		opacity 0
+		visibility hidden
+		pointer-events none
+
+body.leaving
+	#loader
+		opacity 1
+		visibility visible
+		pointer-events auto
 
 body.black-mode
 	color $primary

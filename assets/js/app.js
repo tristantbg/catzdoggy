@@ -139,7 +139,7 @@ $(function() {
                     //   $(".loader").hide();
                     // },100);
                     setTimeout(function() {
-                        $(".loader").hide();
+                        $body.addClass('page-loaded');
                     }, 150);
                 });
             });
@@ -339,7 +339,7 @@ $(function() {
             app.menuHideFix();
             setTimeout(function() {
                 window.location = url;
-            }, 0);
+            }, 200);
         },
         deferImages: function() {
             var imgDefer = document.getElementsByTagName('img');
