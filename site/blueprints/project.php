@@ -16,7 +16,7 @@ fields:
     type: image
     help: Required to display Project
     width: 1/4
-  id:
+  globalid:
     label: Order ID
     type: number
     default: 0

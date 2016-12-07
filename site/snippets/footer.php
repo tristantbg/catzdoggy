@@ -1,7 +1,7 @@
 
 </div>
 
-<footer>
+<footer class="bar">
 	<?= $site->footer()->kt() ?>
 </footer>
 

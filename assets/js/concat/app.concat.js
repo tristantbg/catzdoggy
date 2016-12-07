@@ -4,6 +4,8 @@ var width = $(window).width(),
     content,
     ticker_title,
     flashTimeout,
+    $slider = null,
+    flkty = null,
     isMobile = false,
     $root = '/catsanddogs';
 $(function() {
@@ -29,16 +31,28 @@ $(function() {
                 });
                 $body.on('click', '[data-target]', function(e) {
                     $el = $(this);
+                    target = $el.data('target');
                     e.preventDefault();
-                    if ($el.data('target') == "index") {
+                    if (target == "index") {
                         e.preventDefault();
                         app.goIndex();
+                    } else if (target == "slide" && $slider) {
+                        var slide = $el.data('slide');
+                        $slider.flickity('selectCell', '[data-slide-id="' + slide + '"]', true, true);
+                        $body.addClass('slider-mode');
+                        app.sizeSet();
+                    } else if (target == "sliderclose") {
+                        $body.removeClass('slider-mode');
+                        $body.removeClass('black-mode');
+                        $el.addClass('to-black').removeClass('to-white');
+                        app.sizeSet();
                     } else {
-                        History.pushState({
-                            type: $el.data('target'),
-                            title: $el.data('title'),
-                            id: $el.data('id')
-                        }, $el.data('title') + " | " + $sitetitle, $el.attr('href'));
+                        // History.pushState({
+                        //     type: $el.data('target'),
+                        //     title: $el.data('title'),
+                        //     id: $el.data('id')
+                        // }, $el.data('title') + " | " + $sitetitle, $el.attr('href'));
+                        app.loadContent($el.attr('href'), $container);
                     }
                     // //test push
                     // History.pushState({
@@ -46,6 +60,27 @@ $(function() {
                     //     title: $el.data('title'),
                     //     id: $el.data('id')
                     // }, $el.data('title') + " | " + $sitetitle, $el.attr('href'));
+                });
+                $body.on('click', '#switch', function(e) {
+                    $el = $(this);
+                    e.preventDefault();
+                    if ($el.hasClass('to-black')) {
+                        $body.addClass('black-mode');
+                        $el.removeClass('to-black').addClass('to-white');
+                    } else {
+                        $body.removeClass('black-mode');
+                        $el.addClass('to-black').removeClass('to-white');
+                    }
+                });
+                $body.on('click', '[data-filter]', function(e) {
+                    $el = $(this);
+                    filter = $el.data('filter');
+                    e.preventDefault();
+                    if (filter == 'all') {
+                        if ($body.hasClass('portfolio-mode')) {
+                            $body.addClass('slider-mode');
+                        }
+                    }
                 });
                 $body.on({
                     mouseenter: function() {
@@ -55,6 +90,11 @@ $(function() {
                             $('#artists-menu [data-hover-id="' + id + '"]').addClass('active');
                             if (img) {
                                 $('#image-hover').show().attr('src', img);
+                                if ($(this).parent().is(':last-of-type')) {
+                                    $('#image-hover').css('top', -$('#image-hover').outerHeight());
+                                } else {
+                                    $('#image-hover').css('top', 0);
+                                }
                             }
                         }
                     },
@@ -80,7 +120,7 @@ $(function() {
                 }, '#container .project a');
                 //esc
                 $(document).keyup(function(e) {
-                    if (e.keyCode === 27) app.tickerChange('ok', true);
+                    if (e.keyCode === 27) app.goIndex();
                 });
                 //left
                 $(document).keyup(function(e) {
@@ -91,16 +131,16 @@ $(function() {
                     if (e.keyCode === 39 && $slider) app.goNext($slider);
                 });
                 app.mouseNav();
+                app.loadSlider();
                 $(window).load(function() {
                     app.fitText();
                     app.tickerLoad();
                     // setTimeout(function(){
                     //   $(".loader").hide();
                     // },100);
-                    setTimeout(function(){
-                      $(".loader").fadeOut('100');
-                    },150);
-                    
+                    setTimeout(function() {
+                        $(".loader").hide();
+                    }, 150);
                 });
             });
         },
@@ -170,7 +210,7 @@ $(function() {
         mouseNav: function(event) {
             $(window).mousemove(function(event) {
                 if (!isMobile) {
-                    if ($body.hasClass('artist') || $body.data('id') == 'artists') {
+                    if ($body.hasClass('artist') || $body.hasClass('project') || $body.data('id') == 'artists') {
                         posX = event.pageX;
                         posY = event.pageY;
                         if (posX < width / 2 - 50) {
@@ -183,6 +223,64 @@ $(function() {
                     }
                 }
             });
+        },
+        loadSlider: function() {
+            $slider = $('.slider').flickity({
+                cellSelector: '.cell',
+                imagesLoaded: true,
+                //lazyLoad: 2,
+                setGallerySize: false,
+                //percentPosition: false,
+                accessibility: false,
+                wrapAround: true,
+                prevNextButtons: false,
+                pageDots: false,
+                draggable: Modernizr.touchevents
+            });
+            flkty = $slider.data('flickity');
+            $bottombar = $('#bottom-bar');
+            //HASH SLIDES
+            // if ($slider && flkty) {
+            //     var hash = window.location.hash.substr(1);
+            //     $slider.flickity('selectCell', '[data-id="' + hash + '"]', true, true);
+            //     var count = $(flkty.selectedElement).attr('data-id');
+            //     window.location.hash = count;
+            // }
+            $slider.on('select.flickity', function() {
+                // count = $(flkty.selectedElement).attr('data-id');
+                // window.location.hash = count;
+                var projectTitle = $(flkty.selectedElement).attr('data-project-title');
+                if (typeof projectTitle !== typeof undefined && projectTitle !== false) {
+                    $bottombar.html(projectTitle);
+                }
+                var adjCellElems = $slider.flickity('getAdjacentCellElements', 2);
+                $(adjCellElems).find('.lazyimg').addClass('lazyload');
+            });
+            // $lazyload = $('.lazyimg');
+            // if (isMobile) {
+            //     $lazyload.addClass('lazyload');
+            // }
+            $slider.on('staticClick.flickity', function(event, pointer, cellElement, cellIndex) {
+                if (!cellElement) {
+                    return;
+                }
+                app.goPrev($slider);
+            });
+            $slider.click(function(event) {
+                if (!isMobile) {
+                    if ($body.hasClass('hover-left')) {
+                        app.goPrev($slider);
+                    } else {
+                        app.goNext($slider);
+                    }
+                }
+            });
+        },
+        goNext: function($slider) {
+            $slider.flickity('next', true);
+        },
+        goPrev: function($slider) {
+            $slider.flickity('previous', true);
         },
         goIndex: function() {
             History.pushState({
@@ -241,7 +339,7 @@ $(function() {
             app.menuHideFix();
             setTimeout(function() {
                 window.location = url;
-            }, 400);
+            }, 0);
         },
         deferImages: function() {
             var imgDefer = document.getElementsByTagName('img');

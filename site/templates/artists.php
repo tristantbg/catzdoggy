@@ -2,7 +2,7 @@
 
 <?php $artists = $page->children()->visible() ?>
 
-<div id="artists-menu">
+<div id="artists-menu" class="bar">
 	
 	<?php foreach ($artists as $key => $artist): ?>
 		<span class="artist-link">

@@ -1,7 +1,7 @@
 <?php snippet('header') ?>
 
 <?php $categories = $page->children()->visible() ?>
-<?php $projects = $page->grandChildren()->visible()->sortBy('globalid', 'asc') ?>
+<?php $projects = $page->grandChildren()->visible()->sortBy('id', 'asc') ?>
 <?php $template = $page->pagetemplate() ?>
 
 <?php if($template == 'categories'): ?>
@@ -37,24 +37,32 @@
 	</div>
 
 <?php elseif($template == 'portfolio'): ?>
+<?php $index = 0 ?>
 
 	<div id="artist-projects" class="content-grid">
-		
-		<?php $idx = 0 ?>
+
 		<?php foreach ($projects as $key => $project): ?>
 
-			<?php $image = $project->image($project->featuredimage());
-			      $artist = $project->parent()->parent();
-			      $gridwidth = $project->gridwidth()->value();
-			      $gridoffset = $project->gridoffset()->value();
+			<?php 
+				$gallery = $project->gallery()->yaml();
+				if (count($gallery) > 0) {
+					$image = $project->image($gallery[0]);
+					$index++;
+				} else {
+					$image = null;
+				}
+				$artist = $project->parent()->parent();
+				$gridwidth = $project->gridwidth()->value();
+				$gridoffset = $project->gridoffset()->value();
 			?>
 			<?php if($image): ?>
-			<?php $idx++ ?>
+
 			<div class="project column col<?= $gridwidth ?> off<?= $gridoffset ?>">
+				<?= $index ?>
 				<a href="<?= $project->url() ?>"
 				data-title="<?= $project->title()->html() ?>" 
 				data-hover-title="<?= $project->title()->html() ?>" 
-				data-slide="<?= $idx ?>" 
+				data-slide="<?= $index ?>" 
 				data-target="slide">
 				<?php 
 					$srcset = '';
@@ -73,6 +81,14 @@
 					width="100%" height="auto">
 				</a>
 			</div>
+			
+			<?php
+			foreach ($gallery as $k => $image){
+				if ($k > 0) {
+					$index++;
+				}
+			}
+			?>
 
 			<?php endif ?>
 
@@ -96,12 +112,12 @@
 			<div id="top-bar" class="bar">
 				<div id="switch" class="to-black"></div>
 				<div id="artist-title">
-					<a href="<?= $page->url() ?>" data-title="<?= $page->title()->html() ?>" data-target="artist">
-					<?= $page->title()->html() ?>
+					<a href="<?= $artist->url() ?>" data-title="<?= $artist->title()->html() ?>" data-target="artist">
+					<?= $artist->title()->html() ?>
 					</a>
 				</div>
-				<div id="close" href="<?= $page->url() ?>" data-target="sliderclose">
-					<a href="<?= $page->url() ?>" data-target="sliderclose">
+				<div id="close" href="<?= $artist->url() ?>" data-target="sliderclose">
+					<a href="<?= $artist->url() ?>" data-target="sliderclose">
 						<span></span>
 						<span></span>
 					</a>
@@ -109,39 +125,37 @@
 			</div>
 			
 			<div class="slider">
-			
-			<?php $idx = 0 ?>
+
 			<?php foreach ($projects as $index => $project): ?>
+			<?php $gallery = $project->gallery()->yaml() ?>
 
-				<?php 
-				$image = $project->image($project->featuredimage());
-				$artist = $project->parent()->parent();
-				?>
-				<?php if($image): ?>
-				<?php $idx++ ?>
+				<?php foreach ($gallery as $key => $image): ?>
 
-				<div class="cell" data-slide-id="<?= $idx ?>" data-project-title="<?= $project->title()->html() ?>">
+					<?php $image = $project->image($image); ?>
+
+					<div class="cell" data-id="<?= $key+1 ?>" data-project-title="<?= $project->title()->html() ?>">
 						<?php 
 							$srcset = '';
 							for ($i = 500; $i <= 2500; $i += 500) $srcset .= resizeOnDemand($image, $i) . ' ' . $i . 'w,';
 						?>
 
-						<img 
-						srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" 
-						data-src="<?= resizeOnDemand($image, 1000) ?>" 
-						data-srcset="<?= $srcset ?>" 
-						data-sizes="auto" 
-						data-optimumx="1.5" 
-						class="content lazyimg<?php e($key == 0, ' lazyload', '') ?>" 
-						alt="<?= $project->title()->html().' — © '.$artist->title()->html(); ?>" 
-						width="auto" height="100%">
+							<img 
+							src="<?= resizeOnDemand($image, 50) ?>" 
+							srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" 
+							data-src="<?= resizeOnDemand($image, 1000) ?>" 
+							data-srcset="<?= $srcset ?>" 
+							data-sizes="auto" 
+							data-optimumx="1.5" 
+							class="content lazyimg<?php e($key == 0, ' lazyload', '') ?>" 
+							alt="<?= $project->title()->html().' — © '.$artist->title()->html(); ?>" 
+							width="auto" height="100%">
 
-						<noscript>
-							<img class="content" alt="<?= $project->title()->html().' — © '.$artist->title()->html(); ?>" src="<?php echo resizeOnDemand($image, 1500) ?>" height="100%" width="auto" />
-						</noscript>
-				</div>
+							<noscript>
+								<img class="content" alt="<?= $project->title()->html().' — © '.$artist->title()->html(); ?>" src="<?php echo resizeOnDemand($image, 1500) ?>" height="100%" width="auto" />
+							</noscript>
+					</div>
 
-				<?php endif ?>
+				<?php endforeach ?>
 
 			<?php endforeach ?>
 

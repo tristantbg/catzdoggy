@@ -16,5 +16,4 @@ fields:
   featuredimage:
     label: Featured image
     type: image
-    required: true
     width: 1/2

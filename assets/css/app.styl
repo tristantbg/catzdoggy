@@ -54,11 +54,17 @@ body
 .row
 	span(1)
 
-img
-	width auto
-	height auto
-	max-height 100%
-	max-width 100%
+.bar
+	span(1)
+	background $primary
+	font-size 2rem
+	font-family 'V'
+	text-transform uppercase
+	text-align center
+	line-height 1
+	padding .5em 0 .2em
+	border-top 2px solid
+	border-bottom 2px solid
 
 img.lazyimg
 	transition(opacity, 200ms)
@@ -188,13 +194,6 @@ header
 			display inline
 			line-height 1
 	#ticker
-		span(1)
-		font-size 2rem
-		font-family 'V'
-		line-height 1
-		padding .5em 0 .2em
-		border-top 2px solid $secondary
-		border-bottom 2px solid $secondary
 		overflow hidden
 		text-align left
 		#ticker-inner
@@ -230,26 +229,25 @@ header.hide
 	//transition(opacity, 150ms)
 	opacity 1
 	margin-top 13vw
-
-#image-hover
-	display none
-	position absolute
-	top 0
-	left 0
-	width 300px
-	transition(margin-left, 170ms)
-	margin-left 0px
-	pointer-events none
-	border 2px solid $secondary
-	+below($md)
+	#image-hover
 		display none
-		visibility hidden
+		position absolute
+		top 0
+		left 0
+		width 300px
+		transition(margin-left, 170ms)
+		margin-left 0px
+		pointer-events none
+		border 2px solid
+		+below($md)
+			display none
+			visibility hidden
 
 ////////////////////////////////////////////////////// GRID
 
 #container
 	.content-grid
-		margin-top -2px
+		margin-bottom 3.4rem
 		overflow hidden
 		span(1)
 		flexbox()
@@ -266,8 +264,8 @@ header.hide
 				border none
 		.column
 			span(1/4)
-			border-style inset
-			border-color $secondary
+			margin-top -2px
+			border-style solid
 			border-width 0px 2px 0px 2px
 			position relative
 		.column::before
@@ -297,38 +295,185 @@ header.hide
 			+below($md)
 				display none
 	.categories-grid
-		overflow hidden
+		//overflow hidden
 		span(1)
-		height 100%
+		height 100vh
 		flexbox()
 		align-items center
 		justify-content center
+		a
+			display block
+		img
+			display block
+			width 100%
+			height auto
+		.category-thumbnail
+			span(1/4)
+			border-style solid
+			border-width 2px 0 2px 0
+			position relative
+			overflow hidden
+			.category-title
+				span(1)
+				font-size 2rem
+				line-height 1
+				padding .5em 0 .2em
+				border-top 2px solid
+				overflow hidden
+				text-align center
+				text-transform uppercase
+		.category-thumbnail::after
+			content ''
+			position absolute
+			height 100vh
+			width 2px
+			top 0
+			right 0
+			background $secondary
+		.category-thumbnail:first-child::before
+			content ''
+			position absolute
+			height 100vh
+			width 2px
+			top 0
+			left 0
+			background $secondary
 
 #categories
-	span(1)
 	position fixed
 	bottom 0
 	left 0
 	z-index 190
-	background $primary
-	line-height 1
-	padding .5em 0 .2em
-	border-top 2px solid $secondary
-	border-bottom 2px solid $secondary
 	overflow hidden
 	text-align center
-	text-transform uppercase
 	flex-direction row
 	align-items center
 	justify-content center
+	border-bottom none
 	.category
 		margin 0 .5em
+
+////////////////////////////////////////////////////// SLIDER
+
+.slider-container
+	span(1)
+	flexbox()
+	flex-direction column
+	align-items strech
+	height 100vh
+	#top-bar
+		position relative
+		border-top none
+		#switch
+			position absolute
+			top 0
+			left 0
+			height 100%
+			padding .5em .5em .2em .5em
+			border-right 2px solid
+			cursor pointer
+		#switch.to-black::after
+			content 'B'
+		#switch.to-white::after
+			content 'W'
+		#switch:hover::before
+			content 'Switch to '
+			color $accent
+		#switch.to-black:hover::after
+			content 'black'
+		#switch.to-white:hover::after
+			content 'white'
+		// #close
+		// 	position absolute
+		// 	top 0
+		// 	right 0
+		// 	height 100%
+		// 	padding .5em .5em .2em .5em
+		// 	border-left 2px solid
+		// 	cursor pointer
+		// 	a
+		// 		display block
+		// #close a::before
+		// 	content 'X'
+		#close
+			position absolute
+			top 0
+			right 0
+			height 100%
+			width 40px
+			border-left 2px solid
+			cursor pointer
+			a
+				display block
+			span 
+				display block
+				align()
+				height 2px
+				width 50%
+				left 25%
+				background $secondary
+			span:nth-child(1)
+				transform(rotate(45deg))
+			span:nth-child(2)
+				transform(rotate(-45deg))
+	.slider
+		span(1)
+		height 100%
+		overflow hidden
+		hideselect()
+		.flickity-slider
+			transform(none !important)
+		.flickity-viewport, .flickity-slider
+			height 100%
+		.cell
+			height 100%
+			width 100%
+			flexbox()
+			align-items center
+			justify-content center
+			background transparent url('../../images/loader.gif') center no-repeat
+			background-size 15px
+			.content
+				width auto
+				height 100%
+				margin 0
+				padding 0
+				+below($md)
+					width initial
+					height initial
+					max-width 100%
+					max-height 100%
+			img
+				width auto
+				height 100%
+				border-style solid
+				border-width 0 2px 0 2px
+		.cell
+			left 0 !important
+			visibility hidden
+			opacity 0
+			z-index 0
+		.cell.is-selected
+			opacity 1
+			visibility visible
+			z-index 10
+	#bottom-bar
+		border-bottom none
 
 ////////////////////////////////////////////////////// OVERRIDES
 
 body.hover-left
-	#image-hover
-		margin-left -300px
+	#container
+		#image-hover
+			margin-left -300px
+	.slider-container
+		.slider
+			cursor w-resize
+
+body.hover-right
+	.slider-container
+		.slider
+			cursor e-resize
 
 body.home
 	header
@@ -347,6 +492,37 @@ body.artist
 		nav#menu, nav#menu li
 			display block
 
+body.artist.category-mode
+	header
+		border-bottom 2px solid
+		#ticker
+			display none
+	header:hover
+		border none
+	#container
+		margin-top 0 !important
+
+body.project, body.category
+	header
+		display none
+	#container
+		margin-top 0 !important
+
+body.portfolio-mode
+	.slider-container
+		position fixed
+		top 0
+		left 0
+		display none
+
+body.portfolio-mode.slider-mode
+	header, #artist-projects, #categories
+		display none
+	#container
+		margin-top 0 !important
+	.slider-container
+		flexbox()
+			
 body.page
 	header
 		#page-title
@@ -368,18 +544,11 @@ body[data-id="artists"]
 			opacity 0
 			position absolute
 	#artists-menu
-		span(1)
 		position fixed
 		z-index 190
-		background $primary
-		font-size 2rem
-		font-family 'V'
-		line-height 1
-		padding .5em 0 .2em
-		border-bottom 2px solid $secondary
+		border-top none
 		overflow hidden
 		text-align center
-		text-transform uppercase
 		.artist-link
 			display inline-block
 			margin-right .5em
@@ -388,25 +557,29 @@ body.leaving
 	#container, footer
 		opacity 0
 
+body.black-mode
+	color $primary
+	background-color $secondary
+	.bar
+		background-color $secondary
+	.slider-container
+		#top-bar
+			#close
+				span
+					background $primary
+
 ////////////////////////////////////////////////////// FOOTER
 
 footer
 	display none
-	span(1)
 	transition(opacity, 150ms)
 	opacity 1
 	position fixed
 	bottom 0
 	left 0
 	z-index 190
-	background $primary
-	line-height 1
-	padding .5em 0 .2em
-	border-top 2px solid $secondary
-	border-bottom 2px solid $secondary
 	overflow hidden
 	text-align center
-	text-transform uppercase
 	flex-direction row
 	align-items center
 	justify-content center

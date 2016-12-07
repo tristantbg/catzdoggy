@@ -48,8 +48,6 @@
 	<?php endif ?>
 
 	<meta itemprop="description" content="<?= $site->description()->html() ?>">
-	<!-- <link rel="shortcut icon" href="<?php //url('assets/images/favicon.ico') ?>">
-	<link rel="icon" href="<?php //url('assets/images/favicon.ico') ?>" type="image/x-icon"> -->
 
 	<?php 
 	echo css('assets/css/build/build.min.css');
@@ -67,8 +65,9 @@
 
 </head>
 
-<?php $pname = $page->content()->name(); ?>
-<body class="<?php if($page->isHomepage()) { echo 'home footer'; } elseif($pname == 'artist'){ echo ' artist'; } elseif($pname == 'artists') { echo ' page'; } elseif($pname == 'default') { echo ' page footer'; } ?>" data-id="<?= tagslug($page->title()) ?>">
+<?php $pname = $page->content()->name() ?>
+<?php $template = $page->pagetemplate() ?>
+<body class="<?php if($page->isHomepage()) { echo 'home footer'; } elseif($pname == 'artist'){ echo ' artist'; } elseif($pname == 'artists') { echo ' page'; } elseif($pname == 'project') { echo ' project'; } elseif($pname == 'category') { echo ' category'; } elseif($pname == 'default') { echo ' page footer'; } if ($template == "categories") { echo ' category-mode'; } elseif ( $template == "portfolio") { echo ' portfolio-mode'; }?>" data-id="<?= tagslug($page->uid()) ?>">
 
 <div class="loader"></div>
 
@@ -89,7 +88,7 @@
 	<div id="page-title">
 		<span><?= $page->title()->html() ?></span>
 	</div>
-	<div id="ticker" data-tick="<?php e($pname == 'artist', $site->title()->html(), $page->title()->html()) ?>">
+	<div id="ticker" class="bar" data-tick="<?php e($pname == 'artist', $site->title()->html(), $page->title()->html()) ?>">
 		<div id="ticker-inner"></div>
 	</div>
 </header>
