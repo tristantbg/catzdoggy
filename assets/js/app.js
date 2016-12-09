@@ -111,6 +111,7 @@ $(function() {
                     event.preventDefault();
                     $('[data-target="project"]').removeClass('disabled');
                     $body.removeClass('clients-mode');
+                    app.sizeSet();
                     if (!el.is('[data-all]')) {
                         $('[data-target="project"]:not(\'[data-filter="' + filter + '"]\')').addClass('disabled');
                     }
