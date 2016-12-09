@@ -1,12 +1,14 @@
 /* globals $:false */
 var width = $(window).width(),
     height = $(window).height(),
+    posY,
     content,
     ticker_title,
     flashTimeout,
     $slider = null,
     flkty = null,
     isMobile = false,
+    clientsAnimated = false,
     $root = '/catsanddogs';
 $(function() {
     var app = {
@@ -20,31 +22,57 @@ $(function() {
                 $container = $('#container');
                 $page_title = $("#page-title");
                 $ticker = $("#ticker");
+                $image_hover = $('#image-hover');
                 History.Adapter.bind(window, 'statechange', function() {
                     var State = History.getState();
                     console.log(State);
                     content = State.data;
                     if (content.type == 'project') {
                         $body.addClass('project loading');
+                    } else if (content.type == 'sliderclose') {
+                        $body.removeClass('slider-mode');
+                        $body.removeClass('black-mode');
+                        $el.addClass('to-black').removeClass('to-white');
+                        app.sizeSet();
+                    } else {
+                        app.loadContent(State.url, $container);
                     }
-                    app.loadContent(State.url, $container);
+                });
+                $header.hover(function() {
+                    return;
+                }, function() {
+                    app.sizeSet();
                 });
                 $body.on('click', '[data-target]', function(e) {
                     $el = $(this);
                     target = $el.data('target');
                     e.preventDefault();
+                    if ($el.hasClass('disabled')) {
+                        return;
+                    }
                     if (target == "index") {
                         e.preventDefault();
                         app.goIndex();
                     } else if (target == "slide" && $slider) {
-                        var slide = $el.data('slide');
-                        $slider.flickity('selectCell', '[data-slide-id="' + slide + '"]', true, true);
-                        $body.addClass('slider-mode');
-                        app.sizeSet();
+                        if ($body.hasClass('clients-mode')) {
+                            $body.removeClass('clients-mode');
+                            app.sizeSet();
+                        } else {
+                            var slide = $el.data('slide');
+                            $slider.flickity('selectCell', '[data-slide-id="' + slide + '"]', true, true);
+                            $body.addClass('slider-mode');
+                            app.sizeSet();
+                        }
                     } else if (target == "sliderclose") {
-                        $body.removeClass('slider-mode');
-                        $body.removeClass('black-mode');
-                        $el.addClass('to-black').removeClass('to-white');
+                        if ($body.hasClass('portfolio-mode')) {
+                            $body.removeClass('slider-mode');
+                            app.sizeSet();
+                        } else {
+                            History.back();
+                        }
+                    } else if (target == "clients") {
+                        $body.addClass('clients-mode');
+                        app.clientsAnim();
                         app.sizeSet();
                     } else {
                         // History.pushState({
@@ -72,14 +100,19 @@ $(function() {
                         $el.addClass('to-black').removeClass('to-white');
                     }
                 });
-                $body.on('click', '[data-filter]', function(e) {
-                    $el = $(this);
-                    filter = $el.data('filter');
-                    e.preventDefault();
-                    if (filter == 'all') {
-                        if ($body.hasClass('portfolio-mode')) {
-                            $body.addClass('slider-mode');
-                        }
+                $body.on('click', '#categories a', function(event) {
+                    event.preventDefault();
+                    $('#categories a').removeClass('active');
+                    $(this).addClass('active');
+                });
+                $body.on('click', '#categories [data-filter]', function(event) {
+                    var el = $(this);
+                    var filter = el.data("filter");
+                    event.preventDefault();
+                    $('[data-target="project"]').removeClass('disabled');
+                    $body.removeClass('clients-mode');
+                    if (!el.is('[data-all]')) {
+                        $('[data-target="project"]:not(\'[data-filter="' + filter + '"]\')').addClass('disabled');
                     }
                 });
                 $body.on({
@@ -87,24 +120,29 @@ $(function() {
                         if (!isMobile) {
                             var id = $(this).data('hover-id');
                             var img = $(this).data('hover-image');
+                            var el = $(this);
                             $('#artists-menu [data-hover-id="' + id + '"]').addClass('active');
                             if (img) {
-                                $('#image-hover').show().attr('src', img);
-                                if ($(this).parent().is(':last-of-type')) {
-                                    $('#image-hover').css('top', -$('#image-hover').outerHeight());
-                                } else {
-                                    $('#image-hover').css('top', 0);
-                                }
+                                $image_hover.attr('src', img);
+                                $image_hover.load(function() {
+                                    var imgHeight = $image_hover.outerHeight();
+                                    if (posY - $body.scrollTop() + imgHeight > height + 150) {
+                                        $image_hover.css('top', -imgHeight);
+                                    } else {
+                                        $image_hover.css('top', 0);
+                                    }
+                                    $image_hover.show();
+                                });
                             }
                         }
                     },
                     mouseleave: function() {
                         if (!isMobile) {
                             $('#artists-menu [data-hover-id]').removeClass('active');
-                            $('#image-hover').hide().attr('src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
+                            $image_hover.hide().attr('src', '');
                         }
                     }
-                }, '#artists-list [data-hover-id]');
+                }, '#artists-list [data-hover-id], [data-hover-image]');
                 $body.on({
                     mouseenter: function() {
                         if (!isMobile) {
@@ -117,17 +155,18 @@ $(function() {
                             app.tickerChange(ticker_title, true);
                         }
                     }
-                }, '#container .project a');
+                }, '#container .project a:not(".disabled")');
                 //esc
                 $(document).keyup(function(e) {
-                    if (e.keyCode === 27) app.goIndex();
-                });
-                //left
-                $(document).keyup(function(e) {
+                    if (e.keyCode === 27 && $body.hasClass('slider-mode')) {
+                        if ($body.hasClass('portfolio-mode')) {
+                            $body.removeClass('slider-mode');
+                            app.sizeSet();
+                        } else {
+                            History.back();
+                        }
+                    }
                     if (e.keyCode === 37 && $slider) app.goPrev($slider);
-                });
-                //right
-                $(document).keyup(function(e) {
                     if (e.keyCode === 39 && $slider) app.goNext($slider);
                 });
                 app.mouseNav();
@@ -147,12 +186,13 @@ $(function() {
         sizeSet: function() {
             width = $(window).width();
             height = $(window).height();
-            if (width <= 770 || Modernizr.touch) isMobile = true;
+            if (width <= 767 || Modernizr.touch) isMobile = true;
             app.fitTextContainer();
             app.positionContainer();
             if (isMobile) {
-                if (width >= 770) {
+                if (width > 767) {
                     //location.reload();
+                    isMobile = false;
                 }
             }
         },
@@ -174,6 +214,7 @@ $(function() {
             $page_title.height($page_title.find('span').height() * (1 - 0.07));
             setTimeout(function() {
                 $page_title.height($page_title.find('span').height() * (1 - 0.07));
+                $('#artist-clients').css('font-size', $("#page-title .bigtext-line0").css('font-size'));
                 app.positionContainer();
             }, 150);
         },
@@ -207,10 +248,28 @@ $(function() {
                 inner: '.banner_text'
             });
         },
+        clientsAnim: function() {
+            if (!clientsAnimated) {
+                $clients = $('.client');
+                $clients.each(function(index, el) {
+                    var el = $(this);
+                    var text = el.data('tick');
+                    var span = "<span class='banner_text'>" + text + "</span>";
+                    var ticker_data = span.times(5);
+                    el.empty().append("<div class='inner'>" + ticker_data + "</div>");
+                });
+                $clients.scrollForever({
+                    randomSpeed: true,
+                    container: '.inner',
+                    inner: '.banner_text'
+                });
+                clientsAnimated = true;
+            }
+        },
         mouseNav: function(event) {
-            $(window).mousemove(function(event) {
-                if (!isMobile) {
-                    if ($body.hasClass('artist') || $body.hasClass('project') || $body.data('id') == 'artists') {
+            if (!isMobile) {
+                if ($body.hasClass('artist') || $body.hasClass('project') || $body.hasClass('category') || $body.data('id') == 'artists') {
+                    $(window).mousemove(function(event) {
                         posX = event.pageX;
                         posY = event.pageY;
                         if (posX < width / 2 - 50) {
@@ -219,10 +278,10 @@ $(function() {
                             $body.removeClass('hover-left').addClass('hover-right');
                         }
                         var value = 'translate3d(' + posX + 'px,' + posY + 'px,0)';
-                        $('#image-hover').css('transform', value);
-                    }
+                        $image_hover.css('transform', value);
+                    });
                 }
-            });
+            }
         },
         loadSlider: function() {
             $slider = $('.slider').flickity({
@@ -264,7 +323,7 @@ $(function() {
                 if (!cellElement) {
                     return;
                 }
-                app.goPrev($slider);
+                app.goNext($slider);
             });
             $slider.click(function(event) {
                 if (!isMobile) {
@@ -336,10 +395,10 @@ $(function() {
         },
         loadContent: function(url, target) {
             $body.addClass('leaving');
-            app.menuHideFix();
+            //app.menuHideFix();
             setTimeout(function() {
                 window.location = url;
-            }, 200);
+            }, 250);
         },
         deferImages: function() {
             var imgDefer = document.getElementsByTagName('img');

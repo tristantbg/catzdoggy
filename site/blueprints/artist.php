@@ -32,6 +32,12 @@ fields:
     type:  textarea
   clients:
     label: Clients
-    type: list
-    placeholder: Add a new client
-    width: 1/2
+    type: structure
+    style: table
+    fields:
+      client:
+        label: Name
+        type: text
+      clientimage:
+        label: Image
+        type: image

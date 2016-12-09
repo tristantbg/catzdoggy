@@ -1,3 +1,5 @@
+<!-- Website developed by Tristan Bagot -->
+
 <!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
@@ -67,7 +69,7 @@
 
 <?php $pname = $page->content()->name() ?>
 <?php $template = $page->pagetemplate() ?>
-<body class="<?php if($page->isHomepage()) { echo 'home footer'; } elseif($pname == 'artist'){ echo ' artist'; } elseif($pname == 'artists') { echo ' page'; } elseif($pname == 'project') { echo ' project'; } elseif($pname == 'category') { echo ' category'; } elseif($pname == 'default') { echo ' page footer'; } if ($template == "categories") { echo ' category-mode'; } elseif ( $template == "portfolio") { echo ' portfolio-mode'; }?>" data-id="<?= tagslug($page->uid()) ?>">
+<body class="<?php if($page->isHomepage()) { echo 'home footer'; } elseif($pname == 'artist'){ echo ' artist'; } elseif($pname == 'artists') { echo ' page'; } elseif($pname == 'project') { echo ' project slider-mode'; } elseif($pname == 'category') { echo ' category slider-mode'; } elseif($pname == 'default') { echo ' page footer'; } if ($template == "categories") { echo ' category-mode'; } elseif ( $template == "portfolio") { echo ' portfolio-mode'; }?>" data-id="<?= tagslug($page->uid()) ?>">
 
 <div id="loader"></div>
 

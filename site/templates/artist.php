@@ -83,12 +83,29 @@
 		<div id="categories" class="bar">
 			
 				<span class="category">
-					<a class="active" data-filter="all">All</a>
+					<a class="active" data-filter="all" data-target="slide" data-all>All</a>
 				</span>
 				<span class="clients-link">
 					<a data-target="clients">Clients</a>
 				</span>
 			
+		</div>
+
+		<div id="artist-clients">
+
+		<?php foreach ($page->clients()->toStructure() as $key => $client): ?>
+
+			<div class="client fat" 
+				data-tick="<?= $client->client()->html() ?>" 
+				<?php if ($client->clientimage()->isNotEmpty()): ?>
+				data-hover-image="<?= resizeOnDemand($client->clientimage()->toFile(), 500) ?>"
+				<?php endif ?>
+				><?= $client->client()->html() ?></div>
+
+		<?php endforeach ?>
+		
+		<img id="image-hover" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+
 		</div>
 
 		<div id="artist-slider" class="slider-container">
@@ -101,10 +118,8 @@
 					</a>
 				</div>
 				<div id="close" href="<?= $page->url() ?>" data-target="sliderclose">
-					<a href="<?= $page->url() ?>" data-target="sliderclose">
-						<span></span>
-						<span></span>
-					</a>
+					<span></span>
+					<span></span>
 				</div>
 			</div>
 			
@@ -202,7 +217,7 @@
 		<div id="categories" class="bar">
 			
 				<span class="category">
-					<a class="active" data-filter="all">All</a>
+					<a class="active" data-filter="all" data-all>All</a>
 				</span>
 			<?php foreach ($categories as $key => $cat): ?>
 				<span class="category">
@@ -213,6 +228,23 @@
 					<a data-target="clients">Clients</a>
 				</span>
 			
+		</div>
+
+		<div id="artist-clients">
+
+		<?php foreach ($page->clients()->toStructure() as $key => $client): ?>
+
+			<div class="client fat" 
+				data-tick="<?= $client->client()->html() ?>" 
+				<?php if ($client->clientimage()->isNotEmpty()): ?>
+				data-hover-image="<?= resizeOnDemand($client->clientimage()->toFile(), 500) ?>"
+				<?php endif ?>
+				><?= $client->client()->html() ?></div>
+
+		<?php endforeach ?>
+		
+		<img id="image-hover" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==">
+
 		</div>
 
 <?php endif ?>

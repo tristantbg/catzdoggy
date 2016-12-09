@@ -51,7 +51,7 @@
 
 	</div>
 
-	<div class="bottom bar">
+	<div id="bottom-bar" class="bar">
 		<?= $page->title()->html() ?>
 	</div>
 

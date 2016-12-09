@@ -32,6 +32,10 @@ global-reset()
 	//background $accent
 	//color $primary
 
+::-webkit-scrollbar
+	width 0px
+	background transparent
+
 *
 	box-sizing()
 	//hideselect()
@@ -167,7 +171,6 @@ header
 				max-height .8em
 			li#site-title
 				display block
-				margin-top 0.08em
 			li
 				background $primary
 				margin-top 0.08em
@@ -240,6 +243,7 @@ header.hide
 		margin-left 0px
 		pointer-events none
 		border 2px solid
+		z-index 50
 		+below($md)
 			display none
 			visibility hidden
@@ -256,11 +260,14 @@ header.hide
 		align-items strech
 		a
 			display block
+			border-bottom 2px solid $secondary
+			transition(background-color, 400ms)
+			background-color transparent
 		img
 			display block
 			width 100%
 			height auto
-			border-bottom 2px solid $secondary
+			transition(all, 400ms)
 			+below($md)
 				border none
 		.column
@@ -295,6 +302,13 @@ header.hide
 		.column::before
 			+below($md)
 				display none
+		.project
+			a.disabled
+				background $accent
+				cursor default
+				img
+					mix-blend-mode darken
+					vendor(filter, brightness(1.2))
 	.categories-grid
 		//overflow hidden
 		span(1)
@@ -378,12 +392,15 @@ header.hide
 		#switch.to-white::after
 			content 'W'
 		#switch:hover::before
-			content 'Switch to '
-			color $accent
+			+above($md + 1)
+				content 'Switch to '
+				color $accent
 		#switch.to-black:hover::after
-			content 'black'
+			+above($md + 1)
+				content 'black'
 		#switch.to-white:hover::after
-			content 'white'
+			+above($md + 1)
+				content 'white'
 		// #close
 		// 	position absolute
 		// 	top 0
@@ -461,6 +478,66 @@ header.hide
 	#bottom-bar
 		border-bottom none
 
+////////////////////////////////////////////////////// CLIENTS
+
+#container
+	#artist-clients
+		span(1)
+		margin-bottom 3.4rem
+		display none
+		.client
+			background $primary
+			font-size inherit
+			cursor default
+			overflow hidden
+			text-align left
+			margin-top 0
+			.inner
+				padding-top 0.08em
+				display inline-block
+				white-space nowrap
+				transform(translate3d(0,0,0))
+			.banner_text
+				display inline-block
+				margin-right .5em
+		.client:hover
+			.banner_text
+				color $accent
+		.client::after
+			content ''
+			position absolute
+			width 100%
+			height 2px
+			bottom .08em
+			left 0
+			z-index 1
+			background $secondary
+			pointer-events none
+
+////////////////////////////////////////////////////// FOOTER
+
+footer
+	display none
+	transition(opacity, 150ms)
+	opacity 1
+	position fixed
+	bottom 0
+	left 0
+	z-index 190
+	overflow hidden
+	text-align center
+	flex-direction row
+	align-items center
+	justify-content center
+	p
+		margin 0 .5em
+
+body.footer
+	#container
+		margin-bottom 3rem
+	footer
+		flexbox()
+
 ////////////////////////////////////////////////////// OVERRIDES
 
 body.hover-left
@@ -482,6 +559,8 @@ body.home
 			display none
 		#ticker
 			border-top none
+	#container
+		margin-bottom 0
 
 body.artist
 	header
@@ -523,6 +602,19 @@ body.portfolio-mode.slider-mode
 		margin-top 0 !important
 	.slider-container
 		flexbox()
+
+body.artist.clients-mode
+	header
+		border-bottom 2px solid
+		#ticker
+			display none
+	header:hover
+		border none
+	#container
+		#artist-projects, .slider-container
+			display none
+		#artist-clients
+			display block
 			
 body.page
 	header
@@ -572,27 +664,3 @@ body.black-mode
 			#close
 				span
 					background $primary
-
-////////////////////////////////////////////////////// FOOTER
-
-footer
-	display none
-	transition(opacity, 150ms)
-	opacity 1
-	position fixed
-	bottom 0
-	left 0
-	z-index 190
-	overflow hidden
-	text-align center
-	flex-direction row
-	align-items center
-	justify-content center
-	p
-		margin 0 .5em
-
-body.footer
-	#container
-		margin-bottom 3rem
-	footer
-		flexbox()

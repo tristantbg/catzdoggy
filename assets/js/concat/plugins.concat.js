@@ -323,7 +323,8 @@ var t=this.getRestingPosition(),e=Math.abs(this.getSlideDistance(-t,this.selecte
             speed: 1000, //非连续滚动速度
             delayTime: 0, //滚动间隔
             continuous: true, //是否连续
-            num: 1 //非连续一次滚动的数量
+            num: 1, //非连续一次滚动的数量
+            randomSpeed: false
         };
         var opts = $.extend({}, defaults, options);
         var placeHolder = opts.placeholder;
@@ -331,6 +332,7 @@ var t=this.getRestingPosition(),e=Math.abs(this.getSlideDistance(-t,this.selecte
         var speed = opts.speed;
         var Time = opts.Time;
         var num = opts.num;
+        var randomSpeed = opts.randomSpeed;
         var delayTime = opts.delayTime;
         var scrollTime, resizeTimer;
         return this.each(function() {
@@ -338,6 +340,7 @@ var t=this.getRestingPosition(),e=Math.abs(this.getSlideDistance(-t,this.selecte
             var container = obj.find(opts.container);
             var inner = container.find(opts.inner);
             var len = inner.length;
+            var randomSpeedValue = Math.random() + 0.5;
             var distance, scrollDistance = 0,
                 innerWidth, innerHeight;
             //滚动前的准备工作
@@ -390,7 +393,11 @@ var t=this.getRestingPosition(),e=Math.abs(this.getSlideDistance(-t,this.selecte
                         } else {
                             var value = 'translate3d(-' + scrollDistance + 'px,0,0)';
                             container.css('transform', value);
-                            scrollDistance += speed;
+                            if (randomSpeed) {
+                                scrollDistance += randomSpeedValue;
+                            } else {
+                                scrollDistance += speed;
+                            }
                         }
                     } else if (dir == 'top') {
                         scrollDistance = obj.scrollTop();
@@ -425,11 +432,11 @@ var t=this.getRestingPosition(),e=Math.abs(this.getSlideDistance(-t,this.selecte
             var aTime = opts.continuous == true ? 20 : 2000;
             delayTime = delayTime == 0 ? aTime : delayTime;
             scrollTime = setInterval(autoScroll, delayTime);
-            obj.hover(function() {
-                clearInterval(scrollTime);
-            }, function() {
-                scrollTime = setInterval(autoScroll, delayTime);
-            });
+            // obj.hover(function() {
+            //     clearInterval(scrollTime);
+            // }, function() {
+            //     scrollTime = setInterval(autoScroll, delayTime);
+            // });
         });
     };
 })(jQuery);
