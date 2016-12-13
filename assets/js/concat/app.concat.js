@@ -41,7 +41,7 @@ $(function() {
                 $header.hover(function() {
                     return;
                 }, function() {
-                    app.sizeSet();
+                  setTimeout(app.sizeSet,50);
                 });
                 $body.on('click', '[data-target]', function(e) {
                     $el = $(this);

@@ -257,7 +257,7 @@ header.hide
 		span(1)
 		flexbox()
 		flex-wrap wrap
-		align-items strech
+		align-items stretch
 		a
 			display block
 			border-bottom 2px solid $secondary
@@ -273,9 +273,11 @@ header.hide
 		.column
 			span(1/4)
 			margin-top -2px
-			border-style solid
-			border-width 0px 2px 0px 2px
 			position relative
+			box-shadow(-2px 0px $secondary inset)
+			padding 0 2px 0 0
+			.item-border
+				height 100%
 		.column::before
 			content ''
 			position absolute
@@ -286,19 +288,17 @@ header.hide
 			background $secondary
 		for num in 1..8
 			.col{num}
-				span(num/8)
+				span(num*0.1249)
 			.off0
 				border-right none
-		for num in -8..-1
-			.off{num}
-				margin-left (-1 * num * 12.5%)
 		for num in 1..8
 			.off{num}
-				margin-right (num * 12.5%)
+				margin-right (num * 12.49%)
+			.off{num} + .column
+				border-left 2px solid $secondary
 		.column
 			+below($md)
 				stack()
-				border-width 0px 0px 2px 0px
 		.column::before
 			+below($md)
 				display none
@@ -543,6 +543,7 @@ body.footer
 		margin-bottom 3rem
 	footer
 		flexbox()
+		border-bottom 0
 
 ////////////////////////////////////////////////////// OVERRIDES
 
