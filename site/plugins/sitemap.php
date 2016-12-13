@@ -11,10 +11,15 @@ kirby()->routes(array(
 			$sitemap = '<?xml version="1.0" encoding="utf-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 			foreach(site()->pages()->index()->visible() as $p){
 				if(!in_array($p->uri(), $exclude)){
-					$sitemap .= '<url><loc>' . html($p->url());
-					$sitemap .= '</loc><lastmod>' . $p->modified('c') . '</lastmod><priority>';
-					$sitemap .= ($p->isHomePage()||in_array($p->uri(), $important)) ? 1 : 0.6/$p->depth();
-					$sitemap .= '</priority></url>';
+					if ($p->parent() && $p->parent()->pagetemplate() == "portfolio" || $p->parent()->parent() && $p->parent()->parent()->pagetemplate() == "portfolio") {	
+						break;
+					}
+					else {				
+						$sitemap .= '<url><loc>' . html($p->url());
+						$sitemap .= '</loc><lastmod>' . $p->modified('c') . '</lastmod><priority>';
+						$sitemap .= ($p->isHomePage()||in_array($p->uri(), $important)) ? 1 : 0.6/$p->depth();
+						$sitemap .= '</priority></url>';
+					}
 				}
 			}
 			$sitemap .= '</urlset>';
@@ -22,5 +27,5 @@ kirby()->routes(array(
 			return new Response($sitemap, 'xml');
 
 		}
-	)
-));
+		)
+	));

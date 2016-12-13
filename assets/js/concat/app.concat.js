@@ -183,10 +183,10 @@ $(function() {
                     }, 150);
                 });
                 window.onpageshow = function(event) {
-    setTimeout(function() {
+                    setTimeout(function() {
                         $body.removeClass('leaving').addClass('page-loaded');
                     }, 150);
-};
+                };
             });
         },
         sizeSet: function() {

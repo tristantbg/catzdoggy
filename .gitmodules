@@ -13,3 +13,6 @@
 [submodule "site/plugins/typography"]
 	path = site/plugins/typography
 	url = https://github.com/fabianmichael/kirby-typography.git
+[submodule "site/plugins/kirby-panel-prevnext"]
+	path = site/plugins/kirby-panel-prevnext
+	url = https://github.com/jenstornell/kirby-panel-prevnext

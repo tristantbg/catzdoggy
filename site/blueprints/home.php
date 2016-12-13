@@ -37,7 +37,7 @@ fields:
         label: Grid offset
         type: number
         default: 0
-        min: -8
+        min: 0
         max: 8
         required: true
         width: 1/2

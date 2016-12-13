@@ -37,7 +37,7 @@ global-reset()
 	background transparent
 
 *
-	box-sizing()
+	box-sizing(border-box)
 	//hideselect()
 
 body,html
@@ -209,9 +209,9 @@ header
 			margin-right .5em
 		.banner_text.flash
 			color $accent
-			vendor(animation-name, flash)
-			vendor(animation-duration, 1s)
-			vendor(animation-fill-mode, forwards)
+			animation-name(flash)
+			animation-duration(1s)
+			animation-fill-mode(forwards)
 
 header.fixed
 	position fixed
@@ -491,7 +491,7 @@ header.hide
 			cursor default
 			overflow hidden
 			text-align left
-			margin-top 0
+			margin-top -.08em
 			.inner
 				padding-top 0.08em
 				display inline-block
@@ -500,6 +500,10 @@ header.hide
 			.banner_text
 				display inline-block
 				margin-right .5em
+		.client:first-child
+			margin-top 0
+		.client:last-child
+			margin-bottom -.08em
 		.client:hover
 			.banner_text
 				color $accent
@@ -513,6 +517,8 @@ header.hide
 			z-index 1
 			background $secondary
 			pointer-events none
+		.client:last-child::after
+			display none
 
 ////////////////////////////////////////////////////// FOOTER
 
@@ -604,6 +610,7 @@ body.portfolio-mode.slider-mode
 		flexbox()
 
 body.artist.clients-mode
+	overflow-x hidden
 	header
 		border-bottom 2px solid
 		#ticker

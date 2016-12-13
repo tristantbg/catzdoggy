@@ -41,3 +41,4 @@ fields:
       clientimage:
         label: Image
         type: image
+  prevnext: prevnext
