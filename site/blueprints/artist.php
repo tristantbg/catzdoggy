@@ -3,7 +3,8 @@
 title: Artist
 pages:
   template:
-    - category
+    - project
+    - projectvideo
 files: true
 fields:
   titleSettings:

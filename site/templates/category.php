@@ -1,7 +1,7 @@
 <?php snippet('header') ?>
 
 <?php $artist = $page->parent() ?>
-<?php $projects = $page->children()->visible()->sortBy('globalid', 'asc') ?>
+<?php $projects = $page->children()->visible() ?>
 
 <div id="artist-slider" class="slider-container">
 	

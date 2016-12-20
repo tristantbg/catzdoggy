@@ -20,7 +20,6 @@ fields:
         query:
           page: artists
           fetch: index
-          template: project
           text: '{{title}} ({{uri}})'
           value: '{{uri}}'
         placeholder: Choose a project...

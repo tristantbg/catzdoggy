@@ -1,4 +1,7 @@
-<!-- Website developed by Tristan Bagot -->
+<!-- Design by VLF and Development by Tristan Bagot -->
+
+<?php $pname = $page->content()->name() ?>
+<?php $template = $page->pagetemplate() ?>
 
 <!DOCTYPE html>
 <html lang="en" class="no-js">
@@ -11,6 +14,8 @@
 	<link rel="canonical" href="<?php echo html($page->url()) ?>" />
 	<?php if($page->isHomepage()): ?>
 		<title><?= $site->title()->html() ?></title>
+	<?php elseif($pname == "project" || $pname == "projectvideo"): ?>
+		<title><?= $page->title()->html() ?> | <?= $page->parent()->title()->html() ?></title>
 	<?php else: ?>
 		<title><?= $page->title()->html() ?> | <?= $site->title()->html() ?></title>
 	<?php endif ?>
@@ -33,18 +38,19 @@
 	<?php if($page->isHomepage()): ?>
 		<meta itemprop="name" content="<?= $site->title()->html() ?>">
 		<meta property="og:title" content="<?= $site->title()->html() ?>" />
+	<?php elseif($pname == "project" || $pname == "projectvideo"): ?>
+		<meta itemprop="name" content="<?= $page->title()->html() ?> | <?= $page->parent()->title()->html() ?>">
+		<meta property="og:title" content="<?= $page->title()->html() ?> | <?= $page->parent()->title()->html() ?>" />
 	<?php else: ?>
 		<meta itemprop="name" content="<?= $page->title()->html() ?> | <?= $site->title()->html() ?>">
 		<meta property="og:title" content="<?= $page->title()->html() ?> | <?= $site->title()->html() ?>" />
 	<?php endif ?>
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="<?= html($page->url()) ?>" />
-	<?php if($page->content()->name() == "project"): ?>
-		<?php if (!$page->featured()->empty()): ?>
-			<meta property="og:image" content="<?= resizeOnDemand($page->image($page->featured()), 1200) ?>"/>
-		<?php endif ?>
+	<?php if ($page->featuredimage()->isNotEmpty()): ?>
+		<meta property="og:image" content="<?= resizeOnDemand($page->image($page->featuredimage()), 1200) ?>"/>
 	<?php else: ?>
-		<?php if(!$site->ogimage()->empty()): ?>
+		<?php if($site->ogimage()->isNotEmpty()): ?>
 			<meta property="og:image" content="<?= $site->ogimage()->toFile()->width(1200)->url() ?>"/>
 		<?php endif ?>
 	<?php endif ?>
@@ -67,9 +73,7 @@
 
 </head>
 
-<?php $pname = $page->content()->name() ?>
-<?php $template = $page->pagetemplate() ?>
-<body class="<?php if($page->isHomepage()) { echo 'home footer'; } elseif($pname == 'artist'){ echo ' artist'; } elseif($pname == 'artists') { echo ' page'; } elseif($pname == 'project') { echo ' project slider-mode'; } elseif($pname == 'category') { echo ' category slider-mode'; } elseif($pname == 'default') { echo ' page footer'; } if ($template == "categories") { echo ' category-mode'; } elseif ( $template == "portfolio") { echo ' portfolio-mode'; }?>" data-id="<?= tagslug($page->uid()) ?>">
+<body class="<?php if($page->isHomepage()) { echo 'home'; } elseif($pname == 'artist'){ echo ' artist'; } elseif($pname == 'artists') { echo ' page'; } elseif($pname == 'project' || $pname == 'projectvideo') { echo ' project slider-mode'; } elseif($pname == 'category') { echo ' category slider-mode'; } elseif($pname == 'default') { echo ' page footer'; } if($pname == 'projectvideo') { echo ' black-mode';} if ( $template == "portfolio") { echo ' portfolio-mode'; }?>" data-id="<?= tagslug($page->uid()) ?>">
 
 <div id="loader"></div>
 

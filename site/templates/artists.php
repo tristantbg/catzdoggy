@@ -23,7 +23,7 @@
 		<a href="<?= $artist->url() ?>" data-title="<?= $artist->title()->html() ?>" 
 		data-hover-id="<?= tagslug($artist->title()) ?>" 
 		<?php if ($featured): ?>
-		data-hover-image="<?= resizeOnDemand($featured, 500) ?>"
+		data-hover-image="<?= resizeOnDemand($featured, 1000) ?>"
 		<?php endif ?>
 		data-target="artist">
 		<?= $artist->title()->html() ?>

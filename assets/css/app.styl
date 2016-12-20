@@ -7,7 +7,7 @@ webfont('V', 'V', true, 'normal')
 webfont('VE', 'VE', true, 'normal')
 
 // Media queries
-$xl = 1439px
+$xl = 1600px
 $lg = 1260px
 $md = 1023px
 $sm = 767px
@@ -25,18 +25,18 @@ global-reset()
 //@import '_helpers.styl'
 
 ::selection
-	//background $accent
-	//color $primary
+	background $accent
+	color $primary
 	
 ::-moz-selection
-	//background $accent
-	//color $primary
+	background $accent
+	color $primary
 
 ::-webkit-scrollbar
 	width 0px
 	background transparent
 
-*
+*, :before, :after
 	box-sizing(border-box)
 	//hideselect()
 
@@ -48,6 +48,12 @@ body,html
 
 html
 	font-size 62.5%
+	+above($xl)
+		font-size 75%
+	+below($lg)
+		font-size 50%
+	+below($md)
+		font-size 40%
 
 body
 	text-rendering optimizeLegibility
@@ -69,6 +75,9 @@ body
 	padding .5em 0 .2em
 	border-top 2px solid
 	border-bottom 2px solid
+	+above($xl)
+		border-top 4px solid
+		border-bottom 4px solid
 
 img.lazyimg
 	transition(opacity, 200ms)
@@ -76,6 +85,11 @@ img.lazyimg
 
 img.lazyimg.lazyloaded, img.lazyimg.flickity-lazyloaded
 	opacity 1
+
+video
+	width 100%
+	height 100%
+	display block
 
 ////////////////////////////////////////////////////// TEXTS
 
@@ -105,9 +119,15 @@ p:last-child
 	left 0
 	background $secondary
 	pointer-events none
+	+above($xl)
+		height 4px
 
 .fat.border:last-of-type::after
 	display none
+
+.lg-only
+	+below($md)
+		display none
 
 a, a:hover, a:visited, a:focus
 	color inherit
@@ -120,6 +140,7 @@ a:hover, a.active
 ////////////////////////////////////////////////////// HEADER
 
 #loader
+	hideselect()
 	position fixed
 	transition(all, 180ms)
 	width 100%
@@ -160,6 +181,7 @@ header
 	text-transform uppercase
 	z-index 200
 	background $primary
+	hideselect()
 	nav#menu
 		span(1)
 		overflow hidden
@@ -173,7 +195,7 @@ header
 				display block
 			li
 				background $primary
-				margin-top 0.08em
+				margin-top 0.11em
 			li::after
 				content ''
 				position absolute
@@ -183,6 +205,8 @@ header
 				left 0
 				background $secondary
 				pointer-events none
+				+above($xl)
+					height 4px
 	nav#menu:hover
 		li
 			display block
@@ -203,10 +227,11 @@ header
 		#ticker-inner
 			display inline-block
 			white-space nowrap
+			width 3000px
 			transform(translate3d(0,0,0))
 		.banner_text
 			display inline-block
-			margin-right .5em
+			margin-right .7em
 		.banner_text.flash
 			color $accent
 			animation-name(flash)
@@ -229,6 +254,7 @@ header.hide
 ////////////////////////////////////////////////////// GENERAL
 
 #container
+	hideselect()
 	span(1)
 	//transition(opacity, 150ms)
 	opacity 1
@@ -238,12 +264,14 @@ header.hide
 		position absolute
 		top 0
 		left 0
-		width 300px
+		width 20%
 		transition(margin-left, 170ms)
 		margin-left 0px
 		pointer-events none
 		border 2px solid
 		z-index 50
+		+above($xl)
+			border 4px solid
 		+below($md)
 			display none
 			visibility hidden
@@ -254,30 +282,36 @@ header.hide
 	.content-grid
 		margin-bottom 3.4rem
 		overflow hidden
-		span(1)
+		width 100%
 		flexbox()
-		flex-wrap wrap
+		flex-flow row wrap
 		align-items stretch
 		a
 			display block
 			border-bottom 2px solid $secondary
 			transition(background-color, 400ms)
 			background-color transparent
+			+above($xl)
+				border-bottom 4px solid $secondary
+			+below($md)
+				border none
 		img
 			display block
 			width 100%
 			height auto
 			transition(all, 400ms)
-			+below($md)
-				border none
 		.column
-			span(1/4)
+			width 25%
 			margin-top -2px
 			position relative
-			box-shadow(-2px 0px $secondary inset)
-			padding 0 2px 0 0
-			.item-border
-				height 100%
+			border-left 2px solid $secondary
+			border-right 2px solid $secondary
+			+above($xl)
+				border-left 4px solid $secondary
+				border-right 4px solid $secondary
+		.column, .column::before, .column::after, .project
+			transform(translateZ(0))
+			backface-visibility hidden
 		.column::before
 			content ''
 			position absolute
@@ -287,21 +321,45 @@ header.hide
 			left 0
 			background $secondary
 		for num in 1..8
-			.col{num}
-				span(num*0.1249)
-			.off0
-				border-right none
+			.col-{num}
+				width (num * 12.5%)
 		for num in 1..8
-			.off{num}
-				margin-right (num * 12.49%)
-			.off{num} + .column
-				border-left 2px solid $secondary
+			.off-{num}
+				margin-right (num * 12.5%)
+		[class*="col-"]:first-child, [class*="col-"] + [class*="col-"]
+			border-left none
+		[class*="off-"] + [class*="col-"]::after
+			content ''
+			position absolute
+			height 500vh
+			width 2px
+			top 0
+			left -2px
+			background $secondary
+			+above($xl)
+				width 4px
 		.column
 			+below($md)
 				stack()
+				margin 0
+				padding 0
+				border none
+				border-bottom 2px solid $secondary
+				box-shadow(none)
+				+above($xl)
+					border-bottom 4px solid $secondary
 		.column::before
 			+below($md)
 				display none
+		.project.video
+			img
+				display none
+				+below($md)
+					display block
+			video
+				display block
+				+below($md)
+					display none
 		.project
 			a.disabled
 				background $accent
@@ -316,6 +374,8 @@ header.hide
 		flexbox()
 		align-items center
 		justify-content center
+		+below($md)
+			display block
 		a
 			display block
 		img
@@ -328,6 +388,11 @@ header.hide
 			border-width 2px 0 2px 0
 			position relative
 			overflow hidden
+			+above($xl)
+				border-width 4px 0 4px 0
+			+below($md)
+				span(1/2)
+				border-width 0 0 2px 0
 			.category-title
 				span(1)
 				font-size 2rem
@@ -337,6 +402,8 @@ header.hide
 				overflow hidden
 				text-align center
 				text-transform uppercase
+				+above($xl)
+					border-top 4px solid
 		.category-thumbnail::after
 			content ''
 			position absolute
@@ -345,6 +412,14 @@ header.hide
 			top 0
 			right 0
 			background $secondary
+			+above($xl)
+				width 4px
+			+below($md)
+				display none
+		.category-thumbnail:nth-child(odd)::after
+			+below($md)
+				display block
+				height 300vh
 		.category-thumbnail:first-child::before
 			content ''
 			position absolute
@@ -353,6 +428,10 @@ header.hide
 			top 0
 			left 0
 			background $secondary
+			+above($xl)
+				width 4px
+			+below($md)
+				display none
 
 #categories
 	position fixed
@@ -374,7 +453,7 @@ header.hide
 	span(1)
 	flexbox()
 	flex-direction column
-	align-items strech
+	align-items stretch
 	height 100vh
 	#top-bar
 		position relative
@@ -387,6 +466,8 @@ header.hide
 			padding .5em .5em .2em .5em
 			border-right 2px solid
 			cursor pointer
+			+above($xl)
+				border-right 4px solid
 		#switch.to-black::after
 			content 'B'
 		#switch.to-white::after
@@ -421,6 +502,10 @@ header.hide
 			width 40px
 			border-left 2px solid
 			cursor pointer
+			+above($xl)
+				border-left 4px solid
+			+below($md)
+				width 30px
 			a
 				display block
 			span 
@@ -434,11 +519,25 @@ header.hide
 				transform(rotate(45deg))
 			span:nth-child(2)
 				transform(rotate(-45deg))
+	.video
+		span(1)
+		overflow hidden
+		height calc(100% - 7rem)
+		flexbox()
+		align-items center
+		justify-content center
+		.cell
+			width 100%
+			border 2px solid
+			+above($xl)
+				border 4px solid
 	.slider
 		span(1)
-		height 100%
+		height calc(100vh - 7rem)
 		overflow hidden
 		hideselect()
+		+below($md)
+			height calc(100% - 6rem)
 		.flickity-slider
 			transform(none !important)
 		.flickity-viewport, .flickity-slider
@@ -466,6 +565,10 @@ header.hide
 				height 100%
 				border-style solid
 				border-width 0 2px 0 2px
+				+above($xl)
+					border-width 0 4px 0 4px
+				+below($md)
+					border none
 		.cell
 			left 0 !important
 			visibility hidden
@@ -483,7 +586,7 @@ header.hide
 #container
 	#artist-clients
 		span(1)
-		margin-bottom 3.4rem
+		padding-bottom 3.4rem
 		display none
 		.client
 			background $primary
@@ -502,7 +605,7 @@ header.hide
 				margin-right .5em
 		.client:first-child
 			margin-top 0
-		.client:last-child
+		.client:last-of-type
 			margin-bottom -.08em
 		.client:hover
 			.banner_text
@@ -522,7 +625,7 @@ header.hide
 
 ////////////////////////////////////////////////////// FOOTER
 
-footer
+footer.bar
 	display none
 	transition(opacity, 150ms)
 	opacity 1
@@ -535,22 +638,32 @@ footer
 	flex-direction row
 	align-items center
 	justify-content center
+	+below($md)
+		position initial
+		padding 0
 	p
 		margin 0 .5em
+		+below($md)
+			border-bottom 2px solid
+			margin 0
+			padding .5em 0 .2em
 
 body.footer
 	#container
-		margin-bottom 3rem
+		+above($md + 1)
+			padding-bottom 3rem
 	footer
 		flexbox()
 		border-bottom 0
+		+below($md)
+			display block
 
 ////////////////////////////////////////////////////// OVERRIDES
 
 body.hover-left
 	#container
 		#image-hover
-			margin-left -300px
+			margin-left -20%
 	.slider-container
 		.slider
 			cursor w-resize
@@ -567,7 +680,9 @@ body.home
 		#ticker
 			border-top none
 	#container
-		margin-bottom 0
+		padding-bottom 0
+		.content-grid
+			margin-bottom 0
 
 body.artist
 	header
@@ -582,12 +697,15 @@ body.artist
 body.artist.category-mode
 	header
 		border-bottom 2px solid
+		+above($xl)
+			border-bottom 4px solid
 		#ticker
 			display none
 	header:hover
 		border none
 	#container
-		margin-top 0 !important
+		+above($md + 1)
+			margin-top 0 !important
 
 body.project, body.category
 	header
@@ -614,6 +732,8 @@ body.artist.clients-mode
 	overflow-x hidden
 	header
 		border-bottom 2px solid
+		+above($xl)
+			border-bottom 4px solid
 		#ticker
 			display none
 	header:hover
@@ -640,12 +760,18 @@ body[data-id="artists"]
 		#ticker
 			opacity 0
 			position absolute
+	#container
+		+below($md)
+			margin-top 11.2vw !important
 	#artists-menu
 		position fixed
 		z-index 190
 		border-top none
 		overflow hidden
 		text-align center
+		+below($md)
+			height 0
+			display none
 		.artist-link
 			display inline-block
 			margin-right .5em

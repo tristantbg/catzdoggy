@@ -1,6 +1,6 @@
 <?php snippet('header') ?>
 
-<?php $artist = $page->parent()->parent() ?>
+<?php $artist = $page->parent() ?>
 <?php $gallery = $page->gallery()->yaml() ?>
 
 <div id="artist-slider" class="slider-container">
@@ -26,7 +26,7 @@
 
 			<?php $image = $page->image($image); ?>
 
-			<div class="cell" data-slide-id="<?= $key+1 ?>">
+			<div class="cell" data-slide-id="<?= $key+1 ?>" data-project-title="<?= $page->title()->html() ?>">
 				<?php 
 					$srcset = '';
 					for ($i = 500; $i <= 2500; $i += 500) $srcset .= resizeOnDemand($image, $i) . ' ' . $i . 'w,';

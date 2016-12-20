@@ -1,11 +1,11 @@
 <?php if(!defined('KIRBY')) exit ?>
 
-title: Image Project
+title: Video Project
 pages: false
 files: true
 fields:
   titleSettings:
-    label: Project Settings
+    label: Video Project Settings
     type: headline
   title:
     label: Title
@@ -35,7 +35,15 @@ fields:
   text:
     label: Description for SEO
     type:  textarea
-  gallery:
-    label: Images
-    type: gallery
+  videofile:
+    label: Video File
+    type: select
+    options: files
+    help: MP4 file
+    width: 1/2
+  videourl:
+    label: Video ID
+    type: text
+    help: Vimeo or Youtube ID
+    width: 1/2
   prevnext: prevnext
